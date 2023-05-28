@@ -38,6 +38,8 @@ dependencies:
   pkce: ^1.1.0+1
   animated_bottom_navigation_bar: ^1.2.0
   http: ^1.0.0
+  qr_flutter: ^4.1.0
+  modal_bottom_sheet: ^2.1.2
 
 dev_dependencies:
   flutter_test:
