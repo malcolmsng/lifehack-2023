@@ -1,15 +1,38 @@
-import { z } from 'zod';
+import { boolean, z } from 'zod';
 
 export const User = z.object({
   sgId: z.string(),
   walletAddress: z.string(),
 });
 
+export const Validator = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal('internal'),
+  }),
+  User.partial().extend({
+    type: z.literal('manual'),
+    rate: z.number().max(10).min(0).optional(), // in %
+    active: z.boolean().optional(),
+  }),
+  User.partial().extend({
+    type: z.literal('auto'),
+    rate: z.number().max(5).min(0).optional(), // in %
+    apiKey: z.string().optional(),
+    active: z.boolean().optional(),
+  }),
+]);
+
+export const ValidatorTypeUnion = z.union([
+  z.literal('internal'),
+  z.literal('manual'),
+  z.literal('auto'),
+]);
+
 export const InitiateTransactionPostBody = z.object({
   seller: User,
   itemName: z.string(),
   amount: z.number(), // This is in lamports
-  validator: z.union([z.literal('internal'), z.literal('public')]),
+  validator: ValidatorTypeUnion,
   // Internal stands for using the automated validation service provided by us.
   // Public means any validator that signs up to be one.
 });
@@ -23,10 +46,10 @@ export const AcceptingTransactionPostBody = z.object({
   transactionHash: z.string(),
 });
 
-export const Transaction = InitiateTransactionPostBody.merge(
+export const TransactionBody = InitiateTransactionPostBody.merge(
   AcceptingTransactionPostBody
 ).extend({
-  validator: User.nullable(),
+  validator: Validator,
   inProgressTransactionPubkey: z.string().nullable(),
   validatedTransactionPubkey: z.string().nullable(),
   status: z.union([
