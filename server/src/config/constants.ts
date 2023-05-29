@@ -21,14 +21,19 @@ const LOG_MESSAGES = {
         transactionHash: string,
         validatorType: 'internal' | 'manual' | 'auto'
       ) =>
-        `Transaction (${transactionHash}) is pending ${validatorType} validator.`,
+        `Transaction (${transactionHash}) is pending ${validatorType} validator.` as const,
+      CONFIRMED_VALIDATOR: (
+        transactionHash: string,
+        validatorType: 'internal' | 'manual' | 'auto'
+      ) =>
+        `Transaction (${transactionHash}) has confirmed ${validatorType} validator.` as const
     },
   },
   ERROR: {
     INVALID_BODY: 'Invalid JSON Body.',
     TX_HASH_NOT_FOUND: (hash: string) =>
       `Cannot find the specific transaction hash: ${hash}.` as const,
-    UNKNOWN: 'Unknown error. Returned 500 to client.',
+    UNKNOWN: 'Unknown error. Returned 404 to client.',
   },
 } as const;
 
