@@ -35,7 +35,10 @@ class _DashboardState extends State<Dashboard> {
             ),
             Row(
               children: [
-                Text("Take a look at recently validated transactions!")
+                Text(
+                  "Take a look at recently validated transactions!",
+                  textAlign: TextAlign.center,
+                )
               ],
             ),
             Expanded(

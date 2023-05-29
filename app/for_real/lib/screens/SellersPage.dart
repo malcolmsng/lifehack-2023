@@ -82,7 +82,8 @@ class _SellersPageState extends State<SellersPage> {
                   Map payload = {
                     'product': productController.text,
                     'link': linkController.text,
-                    'price': double.parse(priceController.text)
+                    'price': double.parse(priceController.text),
+                    'isValidated': false
                   };
                   // send to products collection
                   // generate unique id

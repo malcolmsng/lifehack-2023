@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:for_real/constants.dart';
+import 'package:lottie/lottie.dart';
 
 class BuyersPage extends StatefulWidget {
   const BuyersPage({super.key, required this.userName});
@@ -8,14 +9,22 @@ class BuyersPage extends StatefulWidget {
   State<BuyersPage> createState() => _BuyersPageState();
 }
 
-class _BuyersPageState extends State<BuyersPage> {
+class _BuyersPageState extends State<BuyersPage> with TickerProviderStateMixin {
   TextEditingController idController = TextEditingController();
-
+  late AnimationController animationController;
   String userName = "";
   @override
   void initState() {
     userName = widget.userName;
+    animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 100));
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -41,7 +50,26 @@ class _BuyersPageState extends State<BuyersPage> {
                 child: Material(
               borderRadius: BorderRadius.circular(16),
               elevation: 2,
-              child: Container(),
+              child: Container(
+                child: true
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.do_disturb_alt_outlined,
+                              color: hotPink,
+                              size: width * .5,
+                            ),
+                            Text("Cannot find your desired product ")
+                          ],
+                        ),
+                      )
+                    : Lottie.asset(
+                        "assets/lottie/searching.json",
+                        controller: animationController,
+                      ),
+              ),
             )),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -72,8 +100,12 @@ class _BuyersPageState extends State<BuyersPage> {
                   Map payload = {
                     'productId': idController.text,
                   };
-                  // send to products collection
+                  animationController
+                    ..duration = Duration(seconds: 10)
+                    ..forward();
+
                   print(payload);
+                  //add product tile
                 },
                 child: Text('Validate this product!',
                     style: TextStyle(color: blue)),
