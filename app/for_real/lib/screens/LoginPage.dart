@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:for_real/constants.dart';
+import 'package:for_real/screens/HomePage.dart';
 import 'package:for_real/screens/RegisterPage.dart';
 import 'package:pkce/pkce.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+
+String generateAuthUrl(clientId, redirectUri, challenge) {
+  return """https://api.id.gov.sg/v2/oauth/authorize?
+    code_challenge_method=S256
+    &response_type=code
+    &client_id=$clientId
+    &redirect_uri=$redirectUri
+    &scope=openid%20myinfo.name
+    &code_challenge=$challenge
+    """;
+}
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,11 +26,13 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   dynamic pkce;
+  Map creds = {};
   @override
   // ignore: must_call_super
   initState() {
     pkce = PkcePair.generate();
-    print(pkce.codeVerifier);
+    creds = dotenv.env;
+    print(creds.runtimeType);
   }
 
   @override
@@ -94,7 +109,8 @@ class _LoginPageState extends State<LoginPage> {
                 border: Border.all(width: 6, color: blue),
                 borderRadius: BorderRadius.circular(16)),
             child: QrImageView(
-              data: '1234567890',
+              data: generateAuthUrl(
+                  creds["CLIENT_ID"], "abc.com", pkce.codeChallenge),
               version: QrVersions.auto,
               size: width * 0.55,
             ),
@@ -123,6 +139,12 @@ class _LoginPageState extends State<LoginPage> {
             child:
                 Text('Become a Validator!', style: TextStyle(color: offWhite)),
           ),
+          ElevatedButton(
+              onPressed: () => {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => HomePage()))
+                  },
+              child: Text("aseda")),
           SizedBox(
             height: 32,
           )
