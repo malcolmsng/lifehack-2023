@@ -62,6 +62,18 @@ export const acceptingTransactionController: RequestHandler = async (
   res
 ) => {
   try {
+    let transactionHash = req.params['txHash']
+
+    if (transactionHash === '') {
+      logger.error(
+        constants.LOG_MESSAGES.ERROR.TX_HASH_NOT_FOUND(transactionHash),
+      );
+      return res.status(404).json({
+        error: constants.LOG_MESSAGES.ERROR.TX_HASH_NOT_FOUND(transactionHash),
+        success: false,
+      });
+    }
+
     logger.trace(
       constants.LOG_MESSAGES.TRACE.ZOD_PARSING('AcceptingTransactionPostBody')
     );
@@ -90,6 +102,11 @@ export const acceptingTransactionController: RequestHandler = async (
     let notFound = false; // TODO
 
     if (notFound) {
+      logger.error(
+        constants.LOG_MESSAGES.ERROR.TX_HASH_NOT_FOUND(
+          data.transactionHash
+        ),
+      );
       return res.status(404).json({
         err: constants.LOG_MESSAGES.ERROR.TX_HASH_NOT_FOUND(
           data.transactionHash
@@ -122,6 +139,8 @@ export const acceptingTransactionController: RequestHandler = async (
       validatedTransactionPubkey: null,
       status: 'pendingValidator',
     });
+
+    logger.trace(constants.LOG_MESSAGES.TRACE.TRANSACTION.PENDING_VALIDATOR(transactionHash, pendingTransaction.validator))
 
     if (pendingTransaction.validator === 'internal') {
       // TODO: Calls the On Chain Program using SDK to initiate instruction
