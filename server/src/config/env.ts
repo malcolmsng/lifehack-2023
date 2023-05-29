@@ -7,6 +7,7 @@ interface RawEnv {
   PORT: string | undefined;
   VERSION: string | undefined;
   PROJECT_NAME: string | undefined;
+  PROGRAM_ID: string | undefined;
 }
 
 type NodeEnv = 'development' | 'production';
@@ -16,6 +17,7 @@ interface Env {
   PORT: number;
   VERSION: string;
   PROJECT_NAME: string | undefined;
+  PROGRAM_ID: string | undefined;
 }
 
 const getEnv = (): RawEnv => ({
@@ -23,6 +25,7 @@ const getEnv = (): RawEnv => ({
   PORT: process.env.PORT,
   VERSION: process.env.VERSION,
   PROJECT_NAME: process.env.PROJECT_NAME,
+  PROGRAM_ID: process.env.PROGRAM_ID,
 });
 
 const isNodeEnv = (str: string): str is NodeEnv => {
@@ -45,6 +48,7 @@ const getSanitizedEnv = (env: RawEnv): Env => {
     PORT: Number(env.PORT),
     VERSION: env.VERSION!,
     PROJECT_NAME: env.PROJECT_NAME!,
+    PROGRAM_ID: env.PROGRAM_ID!,
   };
 };
 
