@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
 import 'package:for_real/constants.dart';
+import 'package:go_router/go_router.dart';
 // import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -89,15 +90,18 @@ class _RegisterPageState extends State<RegisterPage> {
           Expanded(child: SizedBox()),
           Text("Login with SingPass",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-          Container(
-            margin: EdgeInsets.only(bottom: 16),
-            decoration: BoxDecoration(
-                border: Border.all(width: 6, color: violet),
-                borderRadius: BorderRadius.circular(16)),
-            child: QrImageView(
-              data: '1234567890',
-              version: QrVersions.auto,
-              size: width * 0.55,
+          GestureDetector(
+            onTap: () => context.go('/home'),
+            child: Container(
+              margin: EdgeInsets.only(bottom: 16),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 6, color: violet),
+                  borderRadius: BorderRadius.circular(16)),
+              child: QrImageView(
+                data: '1234567890',
+                version: QrVersions.auto,
+                size: width * 0.55,
+              ),
             ),
           ),
           Padding(

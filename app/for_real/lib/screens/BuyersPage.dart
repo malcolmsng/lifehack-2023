@@ -11,11 +11,13 @@ class BuyersPage extends StatefulWidget {
 
 class _BuyersPageState extends State<BuyersPage> with TickerProviderStateMixin {
   TextEditingController idController = TextEditingController();
+
   late AnimationController animationController;
   String userName = "";
   @override
   void initState() {
     userName = widget.userName;
+    idController.text = 'BcBEJi9DrdDMm3YT3qYU';
     animationController =
         AnimationController(vsync: this, duration: Duration(seconds: 100));
     super.initState();
@@ -51,25 +53,8 @@ class _BuyersPageState extends State<BuyersPage> with TickerProviderStateMixin {
               borderRadius: BorderRadius.circular(16),
               elevation: 2,
               child: Container(
-                child: true
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.do_disturb_alt_outlined,
-                              color: hotPink,
-                              size: width * .5,
-                            ),
-                            Text("Cannot find your desired product ")
-                          ],
-                        ),
-                      )
-                    : Lottie.asset(
-                        "assets/lottie/searching.json",
-                        controller: animationController,
-                      ),
-              ),
+                  child:
+                      CheckContainer(animationController: animationController)),
             )),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -107,13 +92,72 @@ class _BuyersPageState extends State<BuyersPage> with TickerProviderStateMixin {
                   print(payload);
                   //add product tile
                 },
-                child: Text('Validate this product!',
-                    style: TextStyle(color: blue)),
+                child: Text('Find product!', style: TextStyle(color: blue)),
               ),
             ),
           ],
         ),
       ),
     );
+  }
+}
+
+class CheckContainer extends StatefulWidget {
+  CheckContainer({super.key, required this.animationController});
+  AnimationController animationController;
+  @override
+  State<CheckContainer> createState() => _CheckContainerState();
+}
+
+class _CheckContainerState extends State<CheckContainer> {
+  final Future<String> _calculation = Future<String>.delayed(
+    const Duration(seconds: 6),
+    () => 'Data Loaded',
+  );
+  @override
+  Widget build(BuildContext context) {
+    double width = getWidth(context);
+    return FutureBuilder(
+        future: _calculation,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          Widget child;
+          if (snapshot.hasData) {
+            child = Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.check,
+                    color: Colors.green,
+                    size: width * .5,
+                  ),
+                  Text("Rolex Submariner"),
+                  Text("Seller: Reinold Loh"),
+                  Text("Validated By: fHcU7Y"),
+                  Text("Price: 10000")
+                ],
+              ),
+            );
+          } else if (snapshot.hasError) {
+            child = Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.do_disturb_alt_outlined,
+                    color: hotPink,
+                    size: width * .5,
+                  ),
+                  Text("Cannot find product ID ")
+                ],
+              ),
+            );
+          } else {
+            child = Lottie.asset(
+              "assets/lottie/searching.json",
+            );
+          }
+          return child;
+        });
   }
 }

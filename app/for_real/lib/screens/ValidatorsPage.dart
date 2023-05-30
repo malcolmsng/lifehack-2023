@@ -106,9 +106,13 @@ class _MatchContainerState extends State<MatchContainer> {
           List<Widget> children;
           if (snapshot.hasData) {
             children = [
-              Text("<Product Name>"),
-              Text("<Price>"),
-              Text("<Seller>"),
+              Text(
+                "Airpods Pro Max",
+                style: TextStyle(
+                    color: blue, fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              Text("560 USD"),
+              Text("Reinold Loh"),
               Expanded(child: SizedBox()),
               Padding(
                 padding: EdgeInsets.only(bottom: 16.0),

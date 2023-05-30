@@ -1,20 +1,19 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:for_real/constants.dart';
 import 'package:for_real/screens/HomePage.dart';
 import 'package:for_real/screens/RegisterPage.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pkce/pkce.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 String generateAuthUrl(clientId, redirectUri, challenge) {
-  return """https://api.id.gov.sg/v2/oauth/authorize?
-    code_challenge_method=S256
-    &response_type=code
-    &client_id=$clientId
-    &redirect_uri=$redirectUri
-    &scope=openid%20myinfo.name
-    &code_challenge=$challenge
-    """;
+  return """https://api.id.gov.sg/v2/oauth/authorize?code_challenge_method=S256&response_type=code&client_id=$clientId&redirect_uri=$redirectUri&scope=openid%20myinfo.name&code_challenge=$challenge""";
 }
 
 class LoginPage extends StatefulWidget {
@@ -103,16 +102,26 @@ class _LoginPageState extends State<LoginPage> {
           Expanded(child: SizedBox()),
           Text("Login with SingPass",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-          Container(
-            margin: EdgeInsets.only(bottom: 16),
-            decoration: BoxDecoration(
-                border: Border.all(width: 6, color: blue),
-                borderRadius: BorderRadius.circular(16)),
-            child: QrImageView(
-              data: generateAuthUrl(
-                  creds["CLIENT_ID"], "abc.com", pkce.codeChallenge),
-              version: QrVersions.auto,
-              size: width * 0.55,
+          GestureDetector(
+            onTap: () async {
+              var auth_url = Uri.parse(
+                generateAuthUrl(creds["CLIENT_ID"],
+                    "http://localhost:5001/api/callback", pkce.codeChallenge),
+              );
+              context.go('/home');
+              // await launchUrl(auth_url);
+            },
+            child: Container(
+              margin: EdgeInsets.only(bottom: 16),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 6, color: blue),
+                  borderRadius: BorderRadius.circular(16)),
+              child: QrImageView(
+                data: generateAuthUrl(
+                    creds["CLIENT_ID"], "abc.com", pkce.codeChallenge),
+                version: QrVersions.auto,
+                size: width * 0.55,
+              ),
             ),
           ),
           Padding(
@@ -139,12 +148,7 @@ class _LoginPageState extends State<LoginPage> {
             child:
                 Text('Become a Validator!', style: TextStyle(color: offWhite)),
           ),
-          ElevatedButton(
-              onPressed: () => {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => HomePage()))
-                  },
-              child: Text("aseda")),
+          //
           SizedBox(
             height: 32,
           )

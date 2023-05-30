@@ -1,12 +1,29 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:for_real/constants.dart';
+import 'package:for_real/screens/HomePage.dart';
 import 'package:for_real/screens/LoginPage.dart';
+import 'package:for_real/screens/RegisterPage.dart';
+import 'package:go_router/go_router.dart';
 
 Future<void> main() async {
   await dotenv.load();
+  Firebase.initializeApp();
   runApp(const MyApp());
 }
+
+final router = GoRouter(
+  initialLocation: '/',
+  routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => LoginPage(),
+    ),
+    GoRoute(path: '/register', builder: (context, state) => RegisterPage()),
+    GoRoute(path: '/home', builder: ((context, state) => HomePage()))
+  ],
+);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -56,6 +73,8 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return LoginPage();
+    return MaterialApp.router(
+      routerConfig: router,
+    );
   }
 }

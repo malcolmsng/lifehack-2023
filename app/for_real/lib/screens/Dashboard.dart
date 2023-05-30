@@ -42,35 +42,51 @@ class _DashboardState extends State<Dashboard> {
               ],
             ),
             Expanded(
-              child: ListView(
-                // padding: const EdgeInsets.all(8),
-                children: <Widget>[
-                  DashTiles(
-                    product: "Rolex Submariner",
-                    date: DateTime(2023, 05, 29),
-                    value: 10000,
-                    validatedBy: "a1321ASD",
+              child: FutureBuilder(
+                  future: Future<String>.delayed(
+                    const Duration(seconds: 30),
+                    () => 'Data Loaded',
                   ),
-                  DashTiles(
-                    product: "Rolex Submariner",
-                    date: DateTime(2023, 05, 29),
-                    value: 10000,
-                    validatedBy: "a1321ASD",
-                  ),
-                  DashTiles(
-                    product: "Rolex Submariner",
-                    date: DateTime(2023, 05, 29),
-                    value: 10000,
-                    validatedBy: "a1321ASD",
-                  ),
-                  DashTiles(
-                    product: "Rolex Submariner",
-                    date: DateTime(2023, 05, 29),
-                    value: 10000,
-                    validatedBy: "a1321ASD",
-                  ),
-                ],
-              ),
+                  builder: (_, snapshot) {
+                    List<Widget> children;
+                    if (snapshot.hasData) {
+                      children = [
+                        DashTiles(
+                          product: "Rolex Submariner",
+                          date: DateTime(2023, 05, 29),
+                          value: 10000,
+                          validatedBy: "fHcU7Y",
+                        ),
+                        DashTiles(
+                          product: "Airpods Pro Max",
+                          date: DateTime(2023, 05, 29),
+                          value: 560,
+                          validatedBy: "fHcU7Y",
+                        ),
+                      ];
+                    } else {
+                      children = [
+                        DashTiles(
+                          product: "Rolex Submariner",
+                          date: DateTime(2023, 05, 29),
+                          value: 10000,
+                          validatedBy: "fHcU7Y",
+                        ),
+                      ];
+                    }
+                    return ListView(
+                      // padding: const EdgeInsets.all(8),
+
+                      children: <Widget>[
+                        DashTiles(
+                          product: "Rolex Submariner",
+                          date: DateTime(2023, 05, 29),
+                          value: 10000,
+                          validatedBy: "fHcU7Y",
+                        ),
+                      ],
+                    );
+                  }),
             )
           ],
         ),
