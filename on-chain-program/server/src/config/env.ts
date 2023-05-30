@@ -16,8 +16,8 @@ interface Env {
   NODE_ENV: NodeEnv;
   PORT: number;
   VERSION: string;
-  PROJECT_NAME: string | undefined;
-  PROGRAM_ID: string | undefined;
+  PROJECT_NAME: string;
+  PROGRAM_ID: string;
 }
 
 const getEnv = (): RawEnv => ({

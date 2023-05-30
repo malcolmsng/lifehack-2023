@@ -1,17 +1,15 @@
-// ** Third Party Imports
 import express from 'express';
 import cors from 'cors';
+import * as anchor from '@coral-xyz/anchor';
 
-// ** Constants Import
 import { constants } from './config';
 
-// ** Main Router Import
 import routes from './routes';
 
-// ** Middlewares Import
 import accessLog from './middlewares/accessLog';
 
 const app = express();
+anchor.setProvider(anchor.AnchorProvider.env());
 
 // Apply Cors
 app.use(cors(constants.CORS));
